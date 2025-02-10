@@ -43,7 +43,7 @@ def signedUrl_uploader(storage_client, credentials, bucket_name,session_id : str
         st.toast('Die Audiodatei wurde erfolgereich hochgeladen', icon='🤩')
 
     return files_data
-if not _RELEASE:
+#if not _RELEASE:
 
     # from google import auth
     # from google.cloud import storage
