@@ -28,7 +28,7 @@ def generate_signed_url(credentials, blob, method="PUT"):
     return signed_url
 
 
-def signedUrl_uploader(storage_client, credentials, bucket_name, key='1'):
+def signedUrl_uploader(storage_client, credentials, bucket_name,session_id : str, key='1'):
 
     bucket = storage_client.get_bucket(bucket_name)
     blob = bucket.blob("signedUrl file")
@@ -37,36 +37,34 @@ def signedUrl_uploader(storage_client, credentials, bucket_name, key='1'):
     if files_data:
         while not blob.exists() :
             time.sleep(1)
-        new_blob = bucket.rename_blob(blob, files_data['filename'])
+        new_blob = bucket.rename_blob(blob, f"{files_data['filename']}_{session_id}")
         new_blob.content_type = files_data['content_type']
         new_blob.patch()        
-        st.toast('File Uploaded Successfully !', icon='🤩')
+        st.toast('Die Audiodatei wurde erfolgereich hochgeladen', icon='🤩')
 
     return files_data
-   
-
 if not _RELEASE:
 
-    from google import auth
-    from google.cloud import storage
+    # from google import auth
+    # from google.cloud import storage
 
-    # Name of the gcs bucket where you want to upload
-    # this bucket must have cors configuration to allow PUT requests from browser
-    bucket_name = "st-signed-url-bucket"
+    # # Name of the gcs bucket where you want to upload
+    # # this bucket must have cors configuration to allow PUT requests from browser
+    # bucket_name = "st-signed-url-bucket"
 
-    # if you want to use service account keys, specify the path to your json key file here
-    # this service account roles/iam.serviceAccountTokenCreator
-    parent_dir = os.path.dirname(os.path.abspath(__file__))
-    os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.path.join(parent_dir, 'gae.json')
+    # # if you want to use service account keys, specify the path to your json key file here
+    # # this service account roles/iam.serviceAccountTokenCreator
+    # parent_dir = os.path.dirname(os.path.abspath(__file__))
+    # os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.path.join(parent_dir, 'gae.json')
 
 
-    credentials, project = auth.default()
+    # credentials, project = auth.default()
 
-    # if you want to deploy on app engine or cloud run, you don't need to provide key file, just add this line below
-    # the service account associated to app engine or cloud run must have the role roles/iam.serviceAccountTokenCreator
+    # # if you want to deploy on app engine or cloud run, you don't need to provide key file, just add this line below
+    # # the service account associated to app engine or cloud run must have the role roles/iam.serviceAccountTokenCreator
 
-    #credentials.refresh(auth.transport.requests.Request()) # remove this line if you are using environment variable for service account credentials
+    # #credentials.refresh(auth.transport.requests.Request()) # remove this line if you are using environment variable for service account credentials
     
-    storage_client = storage.Client()
+    # storage_client = storage.Client()
 
-    file_data = signedUrl_uploader(storage_client, credentials, bucket_name)
+    # file_data = signedUrl_uploader(storage_client, credentials, bucket_name)
