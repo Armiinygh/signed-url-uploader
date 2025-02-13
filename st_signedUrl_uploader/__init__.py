@@ -28,7 +28,7 @@ def generate_signed_url(credentials, blob, method="PUT"):
     return signed_url
 
 
-def signedUrl_uploader(storage_client, credentials, bucket_name,session_id : str, key='1'):
+def signedUrl_uploader(storage_client, credentials, bucket_name,session_id : str = None, key='1'):
 
     bucket = storage_client.get_bucket(bucket_name)
     blob = bucket.blob("signedUrl file")
@@ -37,8 +37,11 @@ def signedUrl_uploader(storage_client, credentials, bucket_name,session_id : str
     if files_data:
         while not blob.exists() :
             time.sleep(1)
-        name , extention = files_data['filename'].rsplit("." , 1)
-        new_blob = bucket.rename_blob(blob, f"{name}_{session_id}.{extention}")
+        if session_id in not None:
+            name , extention = files_data['filename'].rsplit("." , 1)
+            new_blob = bucket.rename_blob(blob, f"{name}_{session_id}.{extention}")
+        else :
+            new_blob = bucket.rename_blob(blob, files_data['filename'])
         new_blob.content_type = files_data['content_type']
         new_blob.patch()        
         st.toast('Die Audiodatei wurde erfolgereich hochgeladen', icon='🤩')
