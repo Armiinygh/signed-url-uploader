@@ -37,7 +37,7 @@ def signedUrl_uploader(storage_client, credentials, bucket_name,session_id : str
     if files_data:
         while not blob.exists() :
             time.sleep(1)
-        if session_id in not None:
+        if session_id is not None:
             name , extention = files_data['filename'].rsplit("." , 1)
             new_blob = bucket.rename_blob(blob, f"{name}_{session_id}.{extention}")
         else :
